@@ -22,7 +22,7 @@ gameObj.Play.prototype = {
 
     this.add.sprite(120, 200, 'ice');
 
-    let eskimo = this.add.sprite(532, 696, 'eskimo');
+    eskimo = this.add.sprite(532, 696, 'eskimo');
     eskimo.anchor.setTo(0,1);
 
     // Add walking mummy
@@ -66,16 +66,24 @@ gameObj.Play.prototype = {
     timerObj.loop(1000, this.updateTimerFun, this);
     timerObj.start();
   },
+  update: function() {
+    // core game funcitonality, player input, collisions, score
+    if (this.input.keyboard.isDown(Phaser.KeyCode.LEFT) ){
+      eskimo.x -= 6;
+    }else if (this.input.keyboard.isDown(Phaser.KeyCode.RIGHT) ){
+      eskimo.x += 6;
+    }
+  },
   winnerFun: function () {
-    console.log('winnerFun called');
+    // console.log('winnerFun called');
     this.state.start('Winner');
   },
   loserFun: function () {
-    console.log('loserFun called');
+    // console.log('loserFun called');
     this.state.start('Loser');
   },
   pointsFun: function () {
-    console.log('pointsFun called');
+    // console.log('pointsFun called');
     gameObj.gScore += 10;
     score.text = gameObj.gScore;
   },
@@ -91,7 +99,7 @@ gameObj.Play.prototype = {
     timer.text = gameObj.gTime;
     
 
-    console.log(gameObj.gScore);
+    // console.log(gameObj.gScore);
     if(timerSeconds <= 0){
       gameObj.gScore < 2 ? this.state.start('Loser') : this.state.start('Winner');
     }

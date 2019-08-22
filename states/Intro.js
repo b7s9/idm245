@@ -32,12 +32,15 @@ gameObj.Intro.prototype = {
     heading.anchor.setTo(0.5, 0);
     paragraph.anchor.setTo(0.5, 0);
 
-    //Add button
-    //The numbers given in parameters are the indexes of the frames, in this order: OVER, OUT, DOWN
-    btPlay = this.add.button(9, 720 - 120, 'playButton', this.actionOnClick, this, 1, 0, 2);
-    btPlay.anchor.setTo(0, 0.5);
-
   },  
+  update: function() {
+    // core game funcitonality, player input, collisions, score
+
+    if (this.input.keyboard.isDown(Phaser.KeyCode.SPACEBAR) ){
+      this.state.start('Play');
+
+    }
+  },
   actionOnClick: function () {
     console.log('actionOnClick called');
     this.state.start('Play');

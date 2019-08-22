@@ -6,7 +6,6 @@ gameObj.Loser.prototype = {
     
     this.stage.backgroundColor = '#000';
     
-    // this.add.sprite(291, 300, 'jumbotron');
     let loserScreen = this.add.sprite(this.world.centerX, this.world.centerY, 'jumbotron');
     loserScreen.anchor.setTo(0.5, 0.5);
 
@@ -15,9 +14,6 @@ gameObj.Loser.prototype = {
 
     let deadEskimo = this.add.sprite(700, 140, 'deadEskimo');
     
-    //The numbers given in parameters are the indexes of the frames, in this order: OVER, OUT, DOWN
-    var btReplay = this.add.button(9, 600, 'replayButton', this.replayFun, this, 1, 0, 2);
-
     let labelStyle = {
       fill: '#272727',
       font: 'Press Start 2P',
@@ -48,6 +44,14 @@ gameObj.Loser.prototype = {
     let msg = this.add.text(this.world.centerX, 100, 'Could be better...', msgStyle);
     msg.anchor.setTo(0.5, 0);
 
+  },
+  update: function() {
+    // core game funcitonality, player input, collisions, score
+
+    if (this.input.keyboard.isDown(Phaser.KeyCode.SPACEBAR) ){
+      this.state.start('Play');
+
+    }
   },
   replayFun: function () {
     console.log('replayFun called');

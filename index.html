@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Icicle Dodging Simulator</title>
+  <script type="text/javascript">
+    WebFontConfig = {
+      google: {
+        families: ['Press+Start+2P', 'Source+Sans+Pro']
+      }
+    };
+    (function() {
+      var wf = document.createElement('script');
+      wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+      wf.type = 'text/javascript';
+      wf.async = 'true';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(wf, s);
+    })();
+  </script>
+
+  <link rel="stylesheet" href="css/main.css">
+
+  <script src="assets/phaser.min.js"></script>
+  <script src="states/Boot.js"></script>
+  <script src="states/Preloader.js"></script>
+  <script src="states/Intro.js"></script>
+  <script src="states/Play.js"></script>
+  <script src="states/Winner.js"></script>
+  <script src="states/Loser.js"></script>
+</head>
+
+<body>
+  <div id="phaser-canvas"></div>
+  <script type="text/javascript">
+    window.onload = function() {
+      console.log('windows loaded');
+
+      game = new Phaser.Game(960, 720, Phaser.AUTO, 'phaser-canvas');
+
+      game.state.add('Boot', gameObj.Boot);
+      game.state.add('Preloader', gameObj.Preloader);
+      game.state.add('Intro', gameObj.Intro);
+      game.state.add('Play', gameObj.Play);
+      game.state.add('Winner', gameObj.Winner);
+      game.state.add('Loser', gameObj.Loser);
+
+      game.state.start('Boot');
+
+    }; // windows.onload
+  </script>
+</body>
+
+</html>

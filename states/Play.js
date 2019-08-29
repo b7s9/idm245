@@ -28,6 +28,9 @@ gameObj.Play.prototype = {
     eskimo.anchor.setTo(0,1);
     this.physics.enable(eskimo, Phaser.Physics.ARCADE);
 
+    this.physics.setBoundsToWorld(true, true, true, true, false);
+    eskimo.body.collideWorldBounds = true;
+
     // ---------------------- Bullet stuff ----------------------
 
     // Define constants
@@ -43,18 +46,7 @@ gameObj.Play.prototype = {
     // Create an object pool of bullets
     bulletPool = this.add.group();
     for(var i = 0; i < NUMBER_OF_BULLETS; i++) {
-        // Create each bullet and add it to the group.
-        var bullet = this.add.sprite(0, 0, 'ice');
-        bulletPool.add(bullet);
-
-        // Set its pivot point to the center of the bullet
-        bullet.anchor.setTo(0.5, 0.5);
-
-        // Enable physics on the bullet
-        this.physics.enable(bullet, Phaser.Physics.ARCADE);
-
-        // Set its initial state to "dead".
-        bullet.kill();
+        this.createBullet();
     }
 
     // Simulate a pointer click/tap input at the center of the stage
@@ -71,6 +63,8 @@ gameObj.Play.prototype = {
     //  30 is the frame rate (30fps)
     //  true means it will loop when it finishes
     // sMummy.animations.play('walk', 30, true);
+
+    // ---------------------- Text and Timer ----------------------
 
     //The numbers given in parameters are the indexes of the frames, in this order: OVER, OUT, DOWN
     var btWin = this.add.button(10, 600, 'winButton', this.winnerFun, this, 1, 0, 2);
@@ -106,10 +100,11 @@ gameObj.Play.prototype = {
   update: function() {
     // core game funcitonality, player input, collisions, score
     if (this.input.keyboard.isDown(Phaser.KeyCode.LEFT) ){
-      eskimo.x -= 6;
+      eskimo.body.velocity.x = -600;      
     }else if (this.input.keyboard.isDown(Phaser.KeyCode.RIGHT) ){
-      eskimo.x += 6;
-      eskimo.checkWorldBounds = true;
+      eskimo.body.velocity.x = 600;      
+    }else {
+      eskimo.body.velocity.x = 0;
     }
 
     gun.rotation = this.physics.arcade.angleToPointer(gun);
@@ -154,6 +149,23 @@ gameObj.Play.prototype = {
     // Shoot it in the right direction
     bullet.body.velocity.x = Math.cos(bullet.rotation) * BULLET_SPEED;
     bullet.body.velocity.y = Math.sin(bullet.rotation) * BULLET_SPEED;
+  },
+  createBulletPool: function() {
+
+  },
+  createBullet: function () {
+    // Create each bullet and add it to the group.
+    var bullet = this.add.sprite(0, 0, 'ice');
+    bulletPool.add(bullet);
+
+    // Set its pivot point to the center of the bullet
+    bullet.anchor.setTo(0.5, 0.5);
+
+    // Enable physics on the bullet
+    this.physics.enable(bullet, Phaser.Physics.ARCADE);
+
+    // Set its initial state to "dead".
+    bullet.kill();
   },
   collisionHandler: function (target, bullet) {
     // console.log('bullet collided w you');

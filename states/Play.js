@@ -10,6 +10,8 @@ gameObj.Play.prototype = {
   create: function () {
     console.log('State - Play');
 
+    // ---------------------- Add sprites ----------------------
+
     this.stage.backgroundColor = '#fff';
 
     this.add.sprite(0, 100, 'background');
@@ -24,6 +26,41 @@ gameObj.Play.prototype = {
 
     eskimo = this.add.sprite(532, 696, 'eskimo');
     eskimo.anchor.setTo(0,1);
+    this.physics.enable(eskimo, Phaser.Physics.ARCADE);
+
+    // ---------------------- Bullet stuff ----------------------
+
+    // Define constants
+    SHOT_DELAY = 100; // milliseconds (10 bullets/second)
+    BULLET_SPEED = 300; // pixels/second
+    NUMBER_OF_BULLETS = 20;
+
+    gun = this.game.add.sprite(50, this.game.height/2, 'ice');
+
+    // Set the pivot point to the center of the gun
+    gun.anchor.setTo(0.5, 0.5);
+
+    // Create an object pool of bullets
+    bulletPool = this.add.group();
+    for(var i = 0; i < NUMBER_OF_BULLETS; i++) {
+        // Create each bullet and add it to the group.
+        var bullet = this.add.sprite(0, 0, 'ice');
+        bulletPool.add(bullet);
+
+        // Set its pivot point to the center of the bullet
+        bullet.anchor.setTo(0.5, 0.5);
+
+        // Enable physics on the bullet
+        this.physics.enable(bullet, Phaser.Physics.ARCADE);
+
+        // Set its initial state to "dead".
+        bullet.kill();
+    }
+
+    // Simulate a pointer click/tap input at the center of the stage
+    // when the example begins running.
+    this.input.activePointer.x = this.width/2;
+    this.input.activePointer.y = this.height/2;
 
     // Add walking mummy
     // var sMummy = this.add.sprite(300, 200, 'mummy');
@@ -61,7 +98,7 @@ gameObj.Play.prototype = {
     timer.anchor.setTo(1, 0);
     score.anchor.setTo(1, 0);
 
-    timerSeconds = 4;
+    timerSeconds = 120;
     timerObj = this.time.create(false);
     timerObj.loop(1000, this.updateTimerFun, this);
     timerObj.start();
@@ -72,7 +109,59 @@ gameObj.Play.prototype = {
       eskimo.x -= 6;
     }else if (this.input.keyboard.isDown(Phaser.KeyCode.RIGHT) ){
       eskimo.x += 6;
+      eskimo.checkWorldBounds = true;
     }
+
+    gun.rotation = this.physics.arcade.angleToPointer(gun);
+
+    // Shoot a bullet
+    if (this.input.activePointer.isDown) {
+        this.shootBullet();
+    }
+
+    this.physics.arcade.collide(bulletPool, eskimo, this.collisionHandler, null, this);
+  },
+  shootBullet: function() {
+    // Enforce a short delay between shots by recording
+    // the time that each bullet is shot and testing if
+    // the amount of time since the last shot is more than
+    // the required delay.
+    if (typeof this.lastBulletShotAt === undefined) this.lastBulletShotAt = 0;
+    if (this.time.now - this.lastBulletShotAt < SHOT_DELAY) return;
+    this.lastBulletShotAt = this.time.now;
+
+    // Get a dead bullet from the pool
+    var bullet = bulletPool.getFirstDead();
+
+    // If there aren't any bullets available then don't shoot
+    if (bullet === null || bullet === undefined) return;
+
+    // Revive the bullet
+    // This makes the bullet "alive"
+    bullet.revive();
+
+    // Bullets should kill themselves when they leave the world.
+    // Phaser takes care of this for me by setting this flag
+    // but you can do it yourself by killing the bullet if
+    // its x,y coordinates are outside of the world.
+    bullet.checkWorldBounds = true;
+    bullet.outOfBoundsKill = true;
+
+    // Set the bullet position to the gun position.
+    bullet.reset(gun.x, gun.y);
+    bullet.rotation = gun.rotation;
+
+    // Shoot it in the right direction
+    bullet.body.velocity.x = Math.cos(bullet.rotation) * BULLET_SPEED;
+    bullet.body.velocity.y = Math.sin(bullet.rotation) * BULLET_SPEED;
+  },
+  collisionHandler: function (target, bullet) {
+    // console.log('bullet collided w you');
+    target.body.velocity.x = 0;
+    bullet.kill();
+
+    gameObj.gScore++;
+    score.text = gameObj.gScore;
   },
   winnerFun: function () {
     // console.log('winnerFun called');
@@ -84,7 +173,7 @@ gameObj.Play.prototype = {
   },
   pointsFun: function () {
     // console.log('pointsFun called');
-    gameObj.gScore += 10;
+    gameObj.gScore++;
     score.text = gameObj.gScore;
   },
   updateTimerFun: function () {

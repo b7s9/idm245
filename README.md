@@ -9,6 +9,7 @@
 - [x] map left / right player avatar movement to left / right arrow keys
 - [ ] map impact sound to icicle collision with player avatar
 - [ ] consider second sound effect
+- [ ] name of zip = subject
 
 ## Reach Goals
 

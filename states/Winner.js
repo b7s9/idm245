@@ -37,6 +37,9 @@ gameObj.Winner.prototype = {
     // core game funcitonality, player input, collisions, score
 
     if (this.input.keyboard.isDown(Phaser.KeyCode.SPACEBAR) ){
+      gameObj.gScore = 0;
+      gameObj.gTime = '02:00';
+      timerSeconds = 120;
       this.state.start('Play');
 
     }

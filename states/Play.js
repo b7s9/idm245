@@ -157,6 +157,7 @@ gameObj.Play.prototype = {
   },
   collisionHandler: function (target, bullet) {
     // console.log('bullet collided w you');
+    target.body.velocity.y = 0;
     target.body.velocity.x = 0;
     bullet.kill();
 
@@ -190,7 +191,7 @@ gameObj.Play.prototype = {
 
     // console.log(gameObj.gScore);
     if(timerSeconds <= 0){
-      gameObj.gScore < 2 ? this.state.start('Loser') : this.state.start('Winner');
+      gameObj.gScore > 3 ? this.state.start('Loser') : this.state.start('Winner');
     }
   }
 };

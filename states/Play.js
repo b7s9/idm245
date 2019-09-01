@@ -1,9 +1,4 @@
 gameObj.Play = function (game) {
-  // var txScore;
-  // var timerObj;
-  // var timerSeconds;
-
-  // var txTime;
 };
 
 gameObj.Play.prototype = {
@@ -22,8 +17,6 @@ gameObj.Play.prototype = {
     this.add.sprite(500, 0, 'icicles');
     this.add.sprite(700, 0, 'icicles');
 
-    this.add.sprite(120, 200, 'ice');
-
     eskimo = this.add.sprite(532, 696, 'eskimo');
     eskimo.anchor.setTo(0,1);
     this.physics.enable(eskimo, Phaser.Physics.ARCADE);
@@ -36,23 +29,13 @@ gameObj.Play.prototype = {
     // Define constants
     SHOT_DELAY = 100; // milliseconds (10 bullets/second)
     BULLET_SPEED = 300; // pixels/second
-    NUMBER_OF_BULLETS = 20;
-
-    gun = this.game.add.sprite(50, this.game.height/2, 'ice');
-
-    // Set the pivot point to the center of the gun
-    gun.anchor.setTo(0.5, 0.5);
+    NUMBER_OF_BULLETS = 30;
 
     // Create an object pool of bullets
     bulletPool = this.add.group();
     for(var i = 0; i < NUMBER_OF_BULLETS; i++) {
         this.createBullet();
     }
-
-    // Simulate a pointer click/tap input at the center of the stage
-    // when the example begins running.
-    this.input.activePointer.x = this.width/2;
-    this.input.activePointer.y = this.height/2;
 
     // Add walking mummy
     // var sMummy = this.add.sprite(300, 200, 'mummy');
@@ -96,27 +79,30 @@ gameObj.Play.prototype = {
     timerObj = this.time.create(false);
     timerObj.loop(1000, this.updateTimerFun, this);
     timerObj.start();
+
+    icicleTimer = this.time.create(false);
+    icicleTimer.loop(800, this.updateIcicleTimer, this);
+    icicleTimer.start();
   },
   update: function() {
     // core game funcitonality, player input, collisions, score
     if (this.input.keyboard.isDown(Phaser.KeyCode.LEFT) ){
-      eskimo.body.velocity.x = -600;      
+      eskimo.body.acceleration.x = -450;      
     }else if (this.input.keyboard.isDown(Phaser.KeyCode.RIGHT) ){
-      eskimo.body.velocity.x = 600;      
+      eskimo.body.acceleration.x = 450;      
     }else {
-      eskimo.body.velocity.x = 0;
+      eskimo.body.acceleration.x = 0;
     }
 
-    gun.rotation = this.physics.arcade.angleToPointer(gun);
-
-    // Shoot a bullet
-    if (this.input.activePointer.isDown) {
-        this.shootBullet();
-    }
+    // if (this.input.keyboard.isDown(Phaser.KeyCode.UP) ){
+    //   eskimo.body.velocity.y = 400;      
+    // }else {
+    //   eskimo.body.velocity.y = 0;
+    // }
 
     this.physics.arcade.collide(bulletPool, eskimo, this.collisionHandler, null, this);
   },
-  shootBullet: function() {
+  shootBullet: function(x, v) {
     // Enforce a short delay between shots by recording
     // the time that each bullet is shot and testing if
     // the amount of time since the last shot is more than
@@ -142,13 +128,12 @@ gameObj.Play.prototype = {
     bullet.checkWorldBounds = true;
     bullet.outOfBoundsKill = true;
 
-    // Set the bullet position to the gun position.
-    bullet.reset(gun.x, gun.y);
-    bullet.rotation = gun.rotation;
+    bullet.reset(x, -50);
+    bullet.rotation = 1.5;
 
     // Shoot it in the right direction
-    bullet.body.velocity.x = Math.cos(bullet.rotation) * BULLET_SPEED;
-    bullet.body.velocity.y = Math.sin(bullet.rotation) * BULLET_SPEED;
+    bullet.body.velocity.x = Math.cos(bullet.rotation) * v;
+    bullet.body.velocity.y = Math.sin(bullet.rotation) * v;
   },
   createBulletPool: function() {
 
@@ -200,10 +185,16 @@ gameObj.Play.prototype = {
     gameObj.gTime = '0' + timerMinutes + ':' + ( (displaySeconds < 10) ? '0'+displaySeconds : displaySeconds );
     timer.text = gameObj.gTime;
     
-
     // console.log(gameObj.gScore);
     if(timerSeconds <= 0){
       gameObj.gScore > 3 ? this.state.start('Loser') : this.state.start('Winner');
     }
+  },
+  updateIcicleTimer: function(){
+    // x value of icicle drop
+    let x = Math.floor( (this.rnd.integerInRange(0,100) / 100) * this.game.width);
+    // drop velocity
+    let v =  200 * Math.pow( 1 - (timerSeconds / 120), 2 ) * Math.floor(Math.random() * 3) + this.rnd.integerInRange(80,400)
+    this.shootBullet(x, v);
   }
 };

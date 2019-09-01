@@ -13,6 +13,15 @@ gameObj.Loser.prototype = {
     replay.anchor.setTo(0.5, 0);
 
     let deadEskimo = this.add.sprite(700, 140, 'deadEskimo');
+
+    booSound = this.add.audio('boo');
+    // is audio loaded???????????????????
+    soundLoadedFlag = 0;
+
+    this.sound.setDecodedCallback([booSound], this.soundLoadedHandler, this);
+
+    soundLoadedFlag ? booSound.play() : console.log('oh fuck theres no sound');
+
     
     let labelStyle = {
       fill: '#272727',
@@ -52,6 +61,7 @@ gameObj.Loser.prototype = {
       gameObj.gScore = 0;
       gameObj.gTime = '02:00';
       timerSeconds = 120;
+      booSound.stop();
       this.state.start('Play');
 
     }
@@ -59,5 +69,9 @@ gameObj.Loser.prototype = {
   replayFun: function () {
     console.log('replayFun called');
     this.state.start('Play');
+  },
+  soundLoadedHandler: function() {
+    console.log('soundLoadedHandler called');
+    soundLoadedFlag = 1;
   }
 };

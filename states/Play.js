@@ -65,6 +65,12 @@ gameObj.Play.prototype = {
       font: 'Press Start 2P',
       fontSize: 24
     }
+
+    impactSound = this.add.audio('impact');
+    // is audio loaded???????????????????
+    soundLoadedFlag = 0;
+
+    this.sound.setDecodedCallback([impactSound], this.soundLoadedHandler, this);
     
     let timerLabel = this.add.text(406, 363, 'Time', labelStyle);
     let scoreLabel = this.add.text(407, 429, 'Hits', labelStyle);
@@ -158,6 +164,8 @@ gameObj.Play.prototype = {
     target.body.velocity.x = 0;
     bullet.kill();
 
+    soundLoadedFlag ? impactSound.play() : console.log('oh fuck theres no sound');
+
     gameObj.gScore++;
     score.text = gameObj.gScore;
   },
@@ -196,5 +204,9 @@ gameObj.Play.prototype = {
     // drop velocity
     let v =  200 * Math.pow( 1 - (timerSeconds / 120), 2 ) * Math.floor(Math.random() * 3) + this.rnd.integerInRange(80,400)
     this.shootBullet(x, v);
+  },
+  soundLoadedHandler: function() {
+    console.log('soundLoadedHandler called');
+    soundLoadedFlag = 1;
   }
 };

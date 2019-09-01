@@ -11,6 +11,14 @@ gameObj.Winner.prototype = {
 
     let replay = this.add.sprite(this.world.centerX, 539, 'replay');
     replay.anchor.setTo(0.5, 0);
+
+    applauseSound = this.add.audio('applause');
+    // is audio loaded???????????????????
+    soundLoadedFlag = 0;
+    applauseSound.play()
+    // this.sound.setDecodedCallback([applauseSound], this.soundLoadedHandler, this);
+
+    // soundLoadedFlag ? applauseSound.play() : console.log('oh fuck theres no sound');
     
     let labelStyle = {
       fill: '#272727',
@@ -34,14 +42,12 @@ gameObj.Winner.prototype = {
     score.anchor.setTo(1, 0);
   },
   update: function() {
-    // core game funcitonality, player input, collisions, score
-
     if (this.input.keyboard.isDown(Phaser.KeyCode.SPACEBAR) ){
       gameObj.gScore = 0;
       gameObj.gTime = '02:00';
       timerSeconds = 120;
+      applauseSound.stop();
       this.state.start('Play');
-
     }
   },
   replayFun: function () {

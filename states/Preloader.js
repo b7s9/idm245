@@ -39,6 +39,10 @@ gameObj.Preloader.prototype = {
     this.load.spritesheet('loseButton', 'img/btn_lose.png', 90, 90);
     this.load.spritesheet('pointsButton', 'img/btn_points.png', 90, 90);
 
+    this.load.audio('impact', 'snd/impact.mp3');
+    this.load.audio('applause', 'snd/applause.mp3');
+    this.load.audio('boo', 'snd/boo.mp3');
+
   },
   create: function () {
     // Comment out the line below to check preloader animation

@@ -2,7 +2,7 @@ gameObj.Preloader = function (game) {};
 
 gameObj.Preloader.prototype = {
   preload: function () {
-    console.log("State - Preloader");
+    // console.log("State - Preloader");
     this.stage.backgroundColor = '#333';
 
     // Progress bar animation code

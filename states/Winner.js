@@ -2,7 +2,7 @@ gameObj.Winner = function (game) {};
 
 gameObj.Winner.prototype = {
   create: function () {
-    console.log('State - Winner');
+    // console.log('State - Winner');
 
     this.add.sprite(0, 0, 'rainbow');
 
@@ -49,9 +49,5 @@ gameObj.Winner.prototype = {
       applauseSound.stop();
       this.state.start('Play');
     }
-  },
-  replayFun: function () {
-    console.log('replayFun called');
-    this.state.start('Play');
   }
 };

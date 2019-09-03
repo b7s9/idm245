@@ -2,7 +2,7 @@ gameObj.Loser = function (game) {};
 
 gameObj.Loser.prototype = {
   create: function () {
-    console.log('State - Loser');
+    // console.log('State - Loser');
     
     this.stage.backgroundColor = '#000';
     
@@ -21,7 +21,6 @@ gameObj.Loser.prototype = {
     this.sound.setDecodedCallback([booSound], this.soundLoadedHandler, this);
 
     soundLoadedFlag ? booSound.play() : console.log('oh fuck theres no sound');
-
     
     let labelStyle = {
       fill: '#272727',
@@ -56,22 +55,15 @@ gameObj.Loser.prototype = {
   },
   update: function() {
     // core game funcitonality, player input, collisions, score
-
     if (this.input.keyboard.isDown(Phaser.KeyCode.SPACEBAR) ){
       gameObj.gScore = 0;
       gameObj.gTime = '02:00';
       timerSeconds = 120;
       booSound.stop();
       this.state.start('Play');
-
     }
   },
-  replayFun: function () {
-    console.log('replayFun called');
-    this.state.start('Play');
-  },
   soundLoadedHandler: function() {
-    console.log('soundLoadedHandler called');
     soundLoadedFlag = 1;
   }
 };

@@ -2,13 +2,12 @@ gameObj.Intro = function (game) {};
 
 gameObj.Intro.prototype = {
   create: function () {
-    console.log('State - Intro');
+    // console.log('State - Intro');
 
     this.stage.backgroundColor = '#000';    
 
     let instructions = this.add.sprite(this.world.centerX, this.world.centerY, 'instructions');
     instructions.anchor.setTo(0.5, 0.5);
-
 
     let headingStyle = {
       fill: 'white',
@@ -38,15 +37,10 @@ gameObj.Intro.prototype = {
   },  
   update: function() {
     // core game funcitonality, player input, collisions, score
-
     if (this.input.keyboard.isDown(Phaser.KeyCode.SPACEBAR) ){
       this.state.start('Play');
 
     }
-  },
-  actionOnClick: function () {
-    console.log('actionOnClick called');
-    this.state.start('Play');
   }
 };
 

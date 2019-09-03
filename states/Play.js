@@ -3,7 +3,7 @@ gameObj.Play = function (game) {
 
 gameObj.Play.prototype = {
   create: function () {
-    console.log('State - Play');
+    // console.log('State - Play');
 
     // ---------------------- Add sprites ----------------------
 
@@ -163,7 +163,6 @@ gameObj.Play.prototype = {
     bullet.kill();
   },
   collisionHandler: function (target, bullet) {
-    // console.log('bullet collided w you');
     target.body.velocity.y = 0;
     target.body.velocity.x = 0;
     bullet.kill();
@@ -174,20 +173,16 @@ gameObj.Play.prototype = {
     score.text = gameObj.gScore;
   },
   winnerFun: function () {
-    // console.log('winnerFun called');
     this.state.start('Winner');
   },
   loserFun: function () {
-    // console.log('loserFun called');
     this.state.start('Loser');
   },
   pointsFun: function () {
-    // console.log('pointsFun called');
     gameObj.gScore++;
     score.text = gameObj.gScore;
   },
   updateTimerFun: function () {
-    // console.log('updateTimerFun called');
     timerSeconds--;
     // txTime.text = timerSeconds;
     timerMinutes = Math.floor(timerSeconds / 60);
@@ -197,7 +192,6 @@ gameObj.Play.prototype = {
     gameObj.gTime = '0' + timerMinutes + ':' + ( (displaySeconds < 10) ? '0'+displaySeconds : displaySeconds );
     timer.text = gameObj.gTime;
     
-    // console.log(gameObj.gScore);
     if(timerSeconds <= 0){
       gameObj.gScore > 3 ? this.state.start('Loser') : this.state.start('Winner');
     }
@@ -221,7 +215,6 @@ gameObj.Play.prototype = {
     this.shootBullet(x, v);
   },
   soundLoadedHandler: function() {
-    console.log('soundLoadedHandler called');
     soundLoadedFlag = 1;
   }
 };

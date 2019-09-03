@@ -14,13 +14,13 @@ gameObj.Loser.prototype = {
 
     let deadEskimo = this.add.sprite(700, 140, 'deadEskimo');
 
-    booSound = this.add.audio('boo');
+    gameObj.Loser.booSound = this.add.audio('boo');
     // is audio loaded???????????????????
-    soundLoadedFlag = 0;
+    gameObj.Loser.soundLoadedFlag = 0;
 
-    this.sound.setDecodedCallback([booSound], this.soundLoadedHandler, this);
+    this.sound.setDecodedCallback([gameObj.Loser.booSound], this.soundLoadedHandler, this);
 
-    soundLoadedFlag ? booSound.play() : console.log('oh fuck theres no sound');
+    gameObj.Loser.soundLoadedFlag ? gameObj.Loser.booSound.play() : console.log('oh fuck theres no sound');
     
     let labelStyle = {
       fill: '#272727',
@@ -43,11 +43,11 @@ gameObj.Loser.prototype = {
     let timerLabel = this.add.text(406, 313, 'Time', labelStyle);
     let scoreLabel = this.add.text(407, 389, 'Hits', labelStyle);
 
-    timer = this.add.text(640, 313, gameObj.gTime, gameInfoStyle);
-    score = this.add.text(640, 383, gameObj.gScore, gameInfoStyle);
+    let timerGameText = this.add.text(640, 313, gameObj.timer.str, gameInfoStyle);
+    let scoreGameText = this.add.text(640, 383, gameObj.score, gameInfoStyle);
 
-    timer.anchor.setTo(1, 0);
-    score.anchor.setTo(1, 0);
+    timerGameText.anchor.setTo(1, 0);
+    scoreGameText.anchor.setTo(1, 0);
   
     let msg = this.add.text(this.world.centerX, 100, 'Could be better...', msgStyle);
     msg.anchor.setTo(0.5, 0);
@@ -56,14 +56,14 @@ gameObj.Loser.prototype = {
   update: function() {
     // core game funcitonality, player input, collisions, score
     if (this.input.keyboard.isDown(Phaser.KeyCode.SPACEBAR) ){
-      gameObj.gScore = 0;
-      gameObj.gTime = '02:00';
-      timerSeconds = 120;
-      booSound.stop();
+      gameObj.score = 0;
+      gameObj.timer.str = '02:00';
+      gameObj.timer.seconds = 120;
+      gameObj.Loser.booSound.stop();
       this.state.start('Play');
     }
   },
   soundLoadedHandler: function() {
-    soundLoadedFlag = 1;
+    gameObj.Loser.soundLoadedFlag = 1;
   }
 };

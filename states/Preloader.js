@@ -17,6 +17,7 @@ gameObj.Preloader.prototype = {
     this.load.image('jumbotron', 'img/jumbotron.png');
     this.load.image('icicles', 'img/icicles.png');
     this.load.image('eskimo', 'img/eskimo.png');
+    // this.load.spritesheet('eskimo', 'img/eskimo-sprite.png', 100, 140);
     this.load.image('ice', 'img/falling-ice.png');
     
     this.load.image('deadEskimo', 'img/dead-eskimo.png');

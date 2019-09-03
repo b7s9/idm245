@@ -1,7 +1,8 @@
-gameObj.Play = function (game) {
+gameObj.Play = function () {
 };
 
 gameObj.Play.prototype = {
+  
   create: function () {
     // console.log('State - Play');
 
@@ -17,23 +18,22 @@ gameObj.Play.prototype = {
     this.add.sprite(500, 0, 'icicles');
     this.add.sprite(700, 0, 'icicles');
 
-    eskimo = this.add.sprite(532, 696, 'eskimo');
-    eskimo.anchor.setTo(0,1);
-    this.physics.enable(eskimo, Phaser.Physics.ARCADE);
+    gameObj.Play.eskimo = this.add.sprite(532, 696, 'eskimo');
+    gameObj.Play.eskimo.anchor.setTo(0,1);
+    this.physics.enable(gameObj.Play.eskimo, Phaser.Physics.ARCADE);
 
     this.physics.setBoundsToWorld(true, true, true, true, false);
-    eskimo.body.collideWorldBounds = true;
+    gameObj.Play.eskimo.body.collideWorldBounds = true;
 
     // ---------------------- Bullet stuff ----------------------
 
     // Define constants
-    SHOT_DELAY = 100; // milliseconds (10 bullets/second)
-    BULLET_SPEED = 300; // pixels/second
-    NUMBER_OF_BULLETS = 30;
-
+    
+    gameObj.Play.SHOT_DELAY = 100; // milliseconds (10 bullets/second)
+    gameObj.Play.NUMBER_OF_BULLETS = 30
     // Create an object pool of bullets
-    bulletPool = this.add.group();
-    for(var i = 0; i < NUMBER_OF_BULLETS; i++) {
+    gameObj.Play.bulletPool = this.add.group();
+    for(var i = 0; i < gameObj.Play.NUMBER_OF_BULLETS; i++) {
         this.createBullet();
     }
 
@@ -50,9 +50,9 @@ gameObj.Play.prototype = {
     // ---------------------- Text and Timer ----------------------
 
     //The numbers given in parameters are the indexes of the frames, in this order: OVER, OUT, DOWN
-    // var btWin = this.add.button(10, 600, 'winButton', this.winnerFun, this, 1, 0, 2);
-    // var btLose = this.add.button(110, 600, 'loseButton', this.loserFun, this, 1, 0, 2);
-    // var btPoints = this.add.button(210, 600, 'pointsButton', this.pointsFun, this, 1, 0, 2);
+    var btWin = this.add.button(10, 600, 'winButton', this.winnerFun, this, 1, 0, 2);
+    var btLose = this.add.button(110, 600, 'loseButton', this.loserFun, this, 1, 0, 2);
+    var btPoints = this.add.button(210, 600, 'pointsButton', this.pointsFun, this, 1, 0, 2);
 
     let labelStyle = {
       fill: '#272727',
@@ -66,51 +66,48 @@ gameObj.Play.prototype = {
       fontSize: 24
     }
 
-    impactSound = this.add.audio('impact');
+    gameObj.Play.impactSound = this.add.audio('impact');
     // is audio loaded???????????????????
-    soundLoadedFlag = 0;
+    gameObj.Play.soundLoadedFlag = 0;
 
-    this.sound.setDecodedCallback([impactSound], this.soundLoadedHandler, this);
+    this.sound.setDecodedCallback([gameObj.Play.impactSound], this.soundLoadedHandler, this);
     
     let timerLabel = this.add.text(406, 363, 'Time', labelStyle);
     let scoreLabel = this.add.text(407, 429, 'Hits', labelStyle);
 
-    timer = this.add.text(640, 357, gameObj.gTime, gameInfoStyle);
-    score = this.add.text(640, 423, gameObj.gScore, gameInfoStyle);
+    gameObj.Play.timerGameText = this.add.text(640, 357, gameObj.timer.str, gameInfoStyle);
+    gameObj.Play.scoreGameText = this.add.text(640, 423, gameObj.score, gameInfoStyle);
 
-    timer.anchor.setTo(1, 0);
-    score.anchor.setTo(1, 0);
+    gameObj.Play.timerGameText.anchor.setTo(1, 0);
+    gameObj.Play.scoreGameText.anchor.setTo(1, 0);
 
-    timerSeconds = 120;
-    timerObj = this.time.create(false);
+    gameObj.timer.seconds = 120;
+    let timerObj = this.time.create(false);
     timerObj.loop(1000, this.updateTimerFun, this);
     timerObj.start();
 
-    // icicleTimer = this.time.create(false);
-    // icicleTimer.loop(800, this.updateIcicleTimer, this);
-    // icicleTimer.start();
+    // recursive function ends when Play state ends
     this.updateIcicleTimer();
 
   },
   update: function() {
-    
 
     // core game funcitonality, player input, collisions, score
     if (this.input.keyboard.isDown(Phaser.KeyCode.LEFT) ){
-      eskimo.body.acceleration.x = -500;      
+      gameObj.Play.eskimo.body.acceleration.x = -500;    
+      // gameObj.Play.eskimo.setFrame(1);
+      // gameObj.Play.eskimo.body.velocity > 300 ? gameObj.Play.eskimo.frame = 2 : gameObj.Play.eskimo.frame = 4;
+
     }else if (this.input.keyboard.isDown(Phaser.KeyCode.RIGHT) ){
-      eskimo.body.acceleration.x = 500;      
+      gameObj.Play.eskimo.body.acceleration.x = 500;      
+      gameObj.Play.eskimo.body.velocity > 300 ? gameObj.Play.eskimo.frame = 3 : gameObj.Play.eskimo.frame = 5;
     }else {
-      eskimo.body.acceleration.x = 0;
+      gameObj.Play.eskimo.body.acceleration.x = 0;
+      // gameObj.Play.eskimo.setFrame(1);
+
     }
 
-    // if (this.input.keyboard.isDown(Phaser.KeyCode.UP) ){
-    //   eskimo.body.velocity.y = 400;      
-    // }else {
-    //   eskimo.body.velocity.y = 0;
-    // }
-
-    this.physics.arcade.collide(bulletPool, eskimo, this.collisionHandler, null, this);
+    this.physics.arcade.collide(gameObj.Play.bulletPool, gameObj.Play.eskimo, this.collisionHandler, null, this);
   },
   shootBullet: function(x, v) {
     // Enforce a short delay between shots by recording
@@ -118,11 +115,11 @@ gameObj.Play.prototype = {
     // the amount of time since the last shot is more than
     // the required delay.
     if (typeof this.lastBulletShotAt === undefined) this.lastBulletShotAt = 0;
-    if (this.time.now - this.lastBulletShotAt < SHOT_DELAY) return;
+    if (this.time.now - this.lastBulletShotAt < gameObj.Play.SHOT_DELAY) return;
     this.lastBulletShotAt = this.time.now;
 
     // Get a dead bullet from the pool
-    var bullet = bulletPool.getFirstDead();
+    let bullet = gameObj.Play.bulletPool.getFirstDead();
 
     // If there aren't any bullets available then don't shoot
     if (bullet === null || bullet === undefined) return;
@@ -145,13 +142,12 @@ gameObj.Play.prototype = {
     bullet.body.velocity.x = Math.cos(bullet.rotation) * v;
     bullet.body.velocity.y = Math.sin(bullet.rotation) * v;
   },
-  createBulletPool: function() {
-
-  },
   createBullet: function () {
     // Create each bullet and add it to the group.
-    var bullet = this.add.sprite(0, 0, 'ice');
-    bulletPool.add(bullet);
+    let bullet = this.add.sprite(0, 0, 'ice');
+    // let icicleShimmer = bullet.animations.add('icicleShimmer');
+    // bullet.animations.play('icicleShimmer', 15, true);
+    gameObj.Play.bulletPool.add(bullet);
 
     // Set its pivot point to the center of the bullet
     bullet.anchor.setTo(0.5, 0.5);
@@ -167,10 +163,10 @@ gameObj.Play.prototype = {
     target.body.velocity.x = 0;
     bullet.kill();
 
-    soundLoadedFlag ? impactSound.play() : console.log('oh fuck theres no sound');
+    gameObj.Play.soundLoadedFlag ? gameObj.Play.impactSound.play() : console.log('oh fuck theres no sound');
 
-    gameObj.gScore++;
-    score.text = gameObj.gScore;
+    gameObj.score++;
+    gameObj.Play.scoreGameText.text = gameObj.score;
   },
   winnerFun: function () {
     this.state.start('Winner');
@@ -179,26 +175,24 @@ gameObj.Play.prototype = {
     this.state.start('Loser');
   },
   pointsFun: function () {
-    gameObj.gScore++;
-    score.text = gameObj.gScore;
+    gameObj.score++;
+    gameObj.Play.scoreGameText.text = gameObj.score;
   },
   updateTimerFun: function () {
-    timerSeconds--;
-    // txTime.text = timerSeconds;
-    timerMinutes = Math.floor(timerSeconds / 60);
-    displaySeconds = timerSeconds % 60;
+    gameObj.timer.seconds--;
+    let timerMinutes = Math.floor(gameObj.timer.seconds / 60);
+    let displaySeconds = gameObj.timer.seconds % 60;
 
-    // gameObj.gTime = `0${timerMinutes}:${displaySeconds}`;
-    gameObj.gTime = '0' + timerMinutes + ':' + ( (displaySeconds < 10) ? '0'+displaySeconds : displaySeconds );
-    timer.text = gameObj.gTime;
+    gameObj.timer.str = '0' + timerMinutes + ':' + ( (displaySeconds < 10) ? '0'+displaySeconds : displaySeconds );
+    gameObj.Play.timerGameText.text = gameObj.timer.str;
     
-    if(timerSeconds <= 0){
-      gameObj.gScore > 3 ? this.state.start('Loser') : this.state.start('Winner');
+    if(gameObj.timer.seconds <= 0){
+      gameObj.score > 3 ? this.state.start('Loser') : this.state.start('Winner');
     }
   },
   updateIcicleTimer: function(){
     
-    let t = 200 * (timerSeconds / 120) + 600 ;
+    let t = 200 * (gameObj.timer.seconds / 120) + 600 ;
     
     if(t >= 600){
       this.time.events.add(t, this.updateIcicleTimer, this)
@@ -211,10 +205,10 @@ gameObj.Play.prototype = {
     // drop velocity
     // y = m * x^2 * r + b
     // coeficient (200) * x^2 (inverse percentage of time remaining)^2 * random scalar [0,3] + b [80, 400]
-    let v =  200 * Math.pow( 1 - (timerSeconds / 120), 2 ) * Math.floor(Math.random() * 3) + this.rnd.integerInRange(80,400)
+    let v =  200 * Math.pow( 1 - (gameObj.timer.seconds / 120), 2 ) * Math.floor(Math.random() * 3) + this.rnd.integerInRange(80,400)
     this.shootBullet(x, v);
   },
   soundLoadedHandler: function() {
-    soundLoadedFlag = 1;
+    gameObj.Play.soundLoadedFlag = 1;
   }
 };

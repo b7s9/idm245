@@ -12,13 +12,10 @@ gameObj.Winner.prototype = {
     let replay = this.add.sprite(this.world.centerX, 539, 'replay');
     replay.anchor.setTo(0.5, 0);
 
-    applauseSound = this.add.audio('applause');
-    // is audio loaded???????????????????
-    soundLoadedFlag = 0;
-    applauseSound.play()
-    // this.sound.setDecodedCallback([applauseSound], this.soundLoadedHandler, this);
-
-    // soundLoadedFlag ? applauseSound.play() : console.log('oh fuck theres no sound');
+    gameObj.Winner.applauseSound = this.add.audio('applause');
+    gameObj.Winner.applauseSound.play();
+    // decoding callback isnt working for some reason. 
+    // this sound is being preloaded so its fine
     
     let labelStyle = {
       fill: '#272727',
@@ -35,18 +32,18 @@ gameObj.Winner.prototype = {
     let timerLabel = this.add.text(406, 313, 'Time', labelStyle);
     let scoreLabel = this.add.text(407, 389, 'Hits', labelStyle);
 
-    timer = this.add.text(640, 313, gameObj.gTime, gameInfoStyle);
-    score = this.add.text(640, 383, gameObj.gScore, gameInfoStyle);
+    let timerGameText = this.add.text(640, 313, gameObj.timer.str, gameInfoStyle);
+    let scoreGameText = this.add.text(640, 383, gameObj.score, gameInfoStyle);
 
-    timer.anchor.setTo(1, 0);
-    score.anchor.setTo(1, 0);
+    timerGameText.anchor.setTo(1, 0);
+    scoreGameText.anchor.setTo(1, 0);
   },
   update: function() {
     if (this.input.keyboard.isDown(Phaser.KeyCode.SPACEBAR) ){
-      gameObj.gScore = 0;
-      gameObj.gTime = '02:00';
-      timerSeconds = 120;
-      applauseSound.stop();
+      gameObj.score = 0;
+      gameObj.timer.str = '02:00';
+      gameObj.timer.seconds = 120;
+      gameObj.Winner.applauseSound.stop();
       this.state.start('Play');
     }
   }

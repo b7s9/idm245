@@ -16,4 +16,5 @@
 - [ ] refactor code for proper inheretance across scopes (eliminate as many global vars as possible)
 - [ ] dynamic spritesheet on eskimo.png (player avatar movement)
 - [ ] dynamic spritesheet on ice.png (dropping icicles)
-- [x] scale icicle drop speed exponentially as timer drops
+- [x] scale icicle drop velocity exponentially as timer drops
+- [x] scale icicle drop interval to remaining game time (uses recursion 😎)

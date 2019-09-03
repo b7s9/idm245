@@ -86,16 +86,20 @@ gameObj.Play.prototype = {
     timerObj.loop(1000, this.updateTimerFun, this);
     timerObj.start();
 
-    icicleTimer = this.time.create(false);
-    icicleTimer.loop(800, this.updateIcicleTimer, this);
-    icicleTimer.start();
+    // icicleTimer = this.time.create(false);
+    // icicleTimer.loop(800, this.updateIcicleTimer, this);
+    // icicleTimer.start();
+    this.updateIcicleTimer();
+
   },
   update: function() {
+    
+
     // core game funcitonality, player input, collisions, score
     if (this.input.keyboard.isDown(Phaser.KeyCode.LEFT) ){
-      eskimo.body.acceleration.x = -450;      
+      eskimo.body.acceleration.x = -500;      
     }else if (this.input.keyboard.isDown(Phaser.KeyCode.RIGHT) ){
-      eskimo.body.acceleration.x = 450;      
+      eskimo.body.acceleration.x = 500;      
     }else {
       eskimo.body.acceleration.x = 0;
     }
@@ -199,9 +203,20 @@ gameObj.Play.prototype = {
     }
   },
   updateIcicleTimer: function(){
+    
+    let t = 200 * (timerSeconds / 120) + 600 ;
+    
+    if(t >= 600){
+      this.time.events.add(t, this.updateIcicleTimer, this)
+    }else{
+      return false;
+    }
+
     // x value of icicle drop
     let x = Math.floor( (this.rnd.integerInRange(0,100) / 100) * this.game.width);
     // drop velocity
+    // y = m * x^2 * r + b
+    // coeficient (200) * x^2 (inverse percentage of time remaining)^2 * random scalar [0,3] + b [80, 400]
     let v =  200 * Math.pow( 1 - (timerSeconds / 120), 2 ) * Math.floor(Math.random() * 3) + this.rnd.integerInRange(80,400)
     this.shootBullet(x, v);
   },

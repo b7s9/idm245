@@ -24,9 +24,12 @@ gameObj.Intro.prototype = {
 
     let heading = this.add.text(this.world.centerX, 100, 'Icicle Dodging Simulator', headingStyle);
     const paragraphText = 
-    `- Dodge as many icicles as possible in two minutes
+    `
+    - Dodge as many icicles as possible in two minutes
     - Every time you get hit, your score goes up
-    - Win by keeping your score below 3`;
+    - Win by keeping your score below 3
+    - Beware, the stage is icy!
+    `;
     let paragraph = this.add.text(this.world.centerX, 542, paragraphText, paragraphStyle);
 
     heading.anchor.setTo(0.5, 0);

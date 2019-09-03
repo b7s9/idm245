@@ -50,9 +50,9 @@ gameObj.Play.prototype = {
     // ---------------------- Text and Timer ----------------------
 
     //The numbers given in parameters are the indexes of the frames, in this order: OVER, OUT, DOWN
-    var btWin = this.add.button(10, 600, 'winButton', this.winnerFun, this, 1, 0, 2);
-    var btLose = this.add.button(110, 600, 'loseButton', this.loserFun, this, 1, 0, 2);
-    var btPoints = this.add.button(210, 600, 'pointsButton', this.pointsFun, this, 1, 0, 2);
+    // var btWin = this.add.button(10, 600, 'winButton', this.winnerFun, this, 1, 0, 2);
+    // var btLose = this.add.button(110, 600, 'loseButton', this.loserFun, this, 1, 0, 2);
+    // var btPoints = this.add.button(210, 600, 'pointsButton', this.pointsFun, this, 1, 0, 2);
 
     let labelStyle = {
       fill: '#272727',

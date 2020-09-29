@@ -1,4 +1,4 @@
-# idm245
+# Icicle Dodging Simulator
 
 ## Todo List
 
